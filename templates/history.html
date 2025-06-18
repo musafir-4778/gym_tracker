@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>📜 Workout History</h2>
+<p class="text-muted">View and filter your logged workouts</p>
+
+<form method="POST" class="row g-3 mb-4">
+  <div class="col-md-4">
+    <select name="exercise_name" class="form-select">
+      <option value="">Filter by Exercise</option>
+      {% for ex in exercises %}
+        <option value="{{ ex.exercise_name }}">{{ ex.exercise_name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-4">
+    <input type="date" name="log_date" class="form-control">
+  </div>
+  <div class="col-md-4">
+    <button type="submit" class="btn btn-primary">Apply Filter</button>
+  </div>
+</form>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Exercise</th>
+      <th>Reps</th>
+      <th>Weight (kg)</th>
+      <th>Graph</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for log in logs %}
+    <tr>
+      <td>{{ log['log_date'] }}</td>
+      <td>{{ log['exercise_name'] }}</td>
+      <td>{{ log['reps'] }}</td>
+      <td>{{ log['weight'] }}</td>
+      <td>
+        <a href="{{ url_for('exercise_progress', exercise_name=log['exercise_name']) }}" class="btn btn-sm btn-outline-secondary">📈</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% if logs|length == 0 %}
+  <p>No workout logs found yet.</p>
+{% endif %}
+
+{% endblock %}

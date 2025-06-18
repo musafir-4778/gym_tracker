@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>📈 Progress: {{ exercise_name }}</h3>
+<canvas id="progressChart" width="700" height="300"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const ctx = document.getElementById('progressChart').getContext('2d');
+
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: {{ labels | tojson }},
+      datasets: [{
+        label: 'Weight per Set (kg)',
+        data: {{ weights | tojson }},
+        borderColor: 'blue',
+        backgroundColor: 'rgba(0, 0, 255, 0.1)',
+        fill: true,
+        tension: 0.3,
+        pointRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Set Number (Chronological)'
+          }
+        },
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: 'Weight (kg)'
+          }
+        }
+      },
+      plugins: {
+        title: {
+          display: true,
+          text: 'Weight Progress Across Sets'
+        }
+      }
+    }
+  });
+});
+</script>
+{% endblock %}

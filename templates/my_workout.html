@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Hello, {{ user }} 👋</h2>
+<p class="text-muted">Today: {{ today }}</p>
+
+<!-- PUSH SECTION -->
+<h4 class="text-danger">Push Day</h4>
+<div class="row mb-4">
+  {% for ex in push_exercises %}
+    <div class="col-md-3 mb-2">
+      <div class="card text-center shadow" onclick="openLogModal('{{ ex.name }}')">
+        <div class="card-body">
+          <h5>{{ ex.icon }} {{ ex.name }}</h5>
+          <small class="text-muted">{{ ex.muscle_group }}</small>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+  <div class="col-md-3 mb-2">
+    <div class="card text-center border-primary shadow" onclick="openAddExerciseModal('Push')">
+      <div class="card-body">
+        <h5 class="text-primary">➕ Add Exercise</h5>
+        <small class="text-muted">to Push</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PULL SECTION -->
+<h4 class="text-primary">Pull Day</h4>
+<div class="row mb-4">
+  {% for ex in pull_exercises %}
+    <div class="col-md-3 mb-2">
+      <div class="card text-center shadow" onclick="openLogModal('{{ ex.name }}')">
+        <div class="card-body">
+          <h5>{{ ex.icon }} {{ ex.name }}</h5>
+          <small class="text-muted">{{ ex.muscle_group }}</small>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+  <div class="col-md-3 mb-2">
+    <div class="card text-center border-primary shadow" onclick="openAddExerciseModal('Pull')">
+      <div class="card-body">
+        <h5 class="text-primary">➕ Add Exercise</h5>
+        <small class="text-muted">to Pull</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LEGS SECTION -->
+<h4 class="text-success">Leg Day</h4>
+<div class="row mb-4">
+  {% for ex in leg_exercises %}
+    <div class="col-md-3 mb-2">
+      <div class="card text-center shadow" onclick="openLogModal('{{ ex.name }}')">
+        <div class="card-body">
+          <h5>{{ ex.icon }} {{ ex.name }}</h5>
+          <small class="text-muted">{{ ex.muscle_group }}</small>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+  <div class="col-md-3 mb-2">
+    <div class="card text-center border-primary shadow" onclick="openAddExerciseModal('Legs')">
+      <div class="card-body">
+        <h5 class="text-primary">➕ Add Exercise</h5>
+        <small class="text-muted">to Legs</small>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- CUSTOM SECTION -->
+<h4 class="text-dark">Custom</h4>
+<div class="row mb-4">
+  {% for ex in custom_exercises %}
+    <div class="col-md-3 mb-2">
+      <div class="card text-center shadow" onclick="openLogModal('{{ ex.name }}')">
+        <div class="card-body">
+          <h5>{{ ex.icon }} {{ ex.name }}</h5>
+          <small class="text-muted">{{ ex.muscle_group }}</small>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+  <div class="col-md-3 mb-2">
+    <div class="card text-center border-secondary shadow" onclick="openAddExerciseModal('Custom')">
+      <div class="card-body">
+        <h5 class="text-secondary">➕ Add Exercise</h5>
+        <small class="text-muted">to Custom</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Log Exercise Modal -->
+<div class="modal fade" id="logModal" tabindex="-1">
+  <div class="modal-dialog">
+    <form method="POST" action="/log-exercise" class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="logModalTitle">Log Exercise</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="logModalBody">
+        <input type="hidden" name="exercise_name" id="exerciseNameInput">
+        <div id="setContainer">
+          <div class="row mb-2">
+            <div class="col">
+              <input type="number" name="reps[]" placeholder="Reps" class="form-control" required>
+            </div>
+            <div class="col">
+              <input type="text" name="weight[]" placeholder="Weight (kg)" class="form-control" required>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addSet()">+ Add Set</button>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Add Exercise Modal -->
+<div class="modal fade" id="addExerciseModal" tabindex="-1">
+  <div class="modal-dialog">
+    <form method="POST" action="/add-exercise" class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add New Exercise</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-2">
+          <label>Exercise Name</label>
+          <input type="text" name="name" class="form-control" required>
+        </div>
+        <div class="mb-2">
+          <label>Muscle Group</label>
+          <input type="text" name="muscle_group" class="form-control" required>
+        </div>
+        <div class="mb-2">
+          <label>Icon (emoji optional)</label>
+          <input type="text" name="icon" class="form-control">
+        </div>
+        <div class="mb-2">
+          <label>Workout Type</label>
+          <select name="workout_type" class="form-select" id="workoutTypeSelect" required>
+            <option value="Push">Push</option>
+            <option value="Pull">Pull</option>
+            <option value="Legs">Legs</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Add Exercise</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function openLogModal(exName) {
+  document.getElementById("logModalTitle").innerText = "Log for " + exName;
+  document.getElementById("exerciseNameInput").value = exName;
+  document.getElementById("setContainer").innerHTML = `
+    <div class="row mb-2">
+      <div class="col">
+        <input type="number" name="reps[]" placeholder="Reps" class="form-control" required>
+      </div>
+      <div class="col">
+        <input type="text" name="weight[]" placeholder="Weight (kg)" class="form-control" required>
+      </div>
+    </div>`;
+  let modal = new bootstrap.Modal(document.getElementById('logModal'));
+  modal.show();
+}
+
+function addSet() {
+  const container = document.getElementById("setContainer");
+  const row = document.createElement("div");
+  row.className = "row mb-2";
+  row.innerHTML = `
+    <div class="col">
+      <input type="number" name="reps[]" placeholder="Reps" class="form-control" required>
+    </div>
+    <div class="col">
+      <input type="text" name="weight[]" placeholder="Weight (kg)" class="form-control" required>
+    </div>`;
+  container.appendChild(row);
+}
+
+function openAddExerciseModal(type) {
+  document.getElementById("workoutTypeSelect").value = type;
+  let modal = new bootstrap.Modal(document.getElementById('addExerciseModal'));
+  modal.show();
+}
+</script>
+{% endblock %}
