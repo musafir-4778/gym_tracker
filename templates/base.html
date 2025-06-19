@@ -8,13 +8,14 @@
 </head>
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 mb-4">
-    <a class="navbar-brand" href="#">🏋️ Gym Tracker</a>
-    <div class="navbar-nav">
-      <a class="nav-link" href="/my-workout">My Workout</a>
-      <a class="nav-link" href="#">Add Exercise</a>
-      <a class="nav-link" href="/history">Workout History</a>
-    </div>
-  </nav>
+  <a class="navbar-brand" href="#">🏋️ Gym Tracker</a>
+  <div class="navbar-nav">
+    <a class="nav-link" href="{{ url_for('my_workout') }}">My Workout</a>
+    <a class="nav-link" href="{{ url_for('add_exercise') }}">Add Exercise</a>
+    <a class="nav-link" href="{{ url_for('history') }}">Workout History</a>
+    <a class="nav-link" href="{{ url_for('select_progress_graph') }}">Progress Graphs</a>  <!-- ✅ New Link -->
+  </div>
+</nav>
 
   <div class="container">
     {% block content %}{% endblock %}

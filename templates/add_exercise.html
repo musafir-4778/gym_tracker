@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-4">➕ Add Exercises to Your Workout</h2>
+<form method="POST">
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+
+    {% for ex in exercises %}
+    <div class="col">
+      <label class="card h-100 p-3 shadow-sm selectable-tile">
+        <input type="checkbox" name="selected_exercises[]" value="{{ ex.name }}" class="form-check-input me-2">
+        <div class="card-body">
+          <h5 class="card-title">{{ ex.icon }} {{ ex.name }}</h5>
+          <p class="card-text text-muted">Muscle: {{ ex.muscle }} | Type: {{ ex.type }}</p>
+        </div>
+      </label>
+    </div>
+    {% endfor %}
+
+  </div>
+
+  <div class="mt-4">
+    <button type="submit" class="btn btn-success">✅ Add Selected</button>
+    <a href="{{ url_for('my_workout') }}" class="btn btn-secondary">Cancel</a>
+  </div>
+</form>
+
+<style>
+  .selectable-tile {
+    border: 2px solid transparent;
+    cursor: pointer;
+  }
+  .selectable-tile input[type="checkbox"] {
+    display: none;
+  }
+  .selectable-tile:hover {
+    border-color: #0d6efd;
+    background-color: #f0f8ff;
+  }
+  .selectable-tile input[type="checkbox"]:checked + .card-body {
+    border-color: #198754;
+    background-color: #d1e7dd;
+  }
+</style>
+{% endblock %}

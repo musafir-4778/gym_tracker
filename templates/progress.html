@@ -1,6 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
 <h3>📈 Progress: {{ exercise_name }}</h3>
+
+<!-- Checkboxes to toggle datasets -->
+<div class="mb-3">
+  <label><input type="checkbox" class="toggle-dataset" data-key="weight" checked> Weight (kg)</label>
+  <label class="ms-3"><input type="checkbox" class="toggle-dataset" data-key="reps" checked> Reps</label>
+  <label class="ms-3"><input type="checkbox" class="toggle-dataset" data-key="volume" checked> Volume (kg)</label>
+</div>
+
 <canvas id="progressChart" width="700" height="300"></canvas>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -9,44 +17,75 @@
 document.addEventListener("DOMContentLoaded", function () {
   const ctx = document.getElementById('progressChart').getContext('2d');
 
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: {{ labels | tojson }},
-      datasets: [{
-        label: 'Weight per Set (kg)',
-        data: {{ weights | tojson }},
-        borderColor: 'blue',
-        backgroundColor: 'rgba(0, 0, 255, 0.1)',
-        fill: true,
-        tension: 0.3,
-        pointRadius: 4
-      }]
+  const dataMap = {
+    weight: {
+      label: 'Weight (kg)',
+      data: {{ weights | tojson }},
+      borderColor: 'blue',
     },
+    reps: {
+      label: 'Reps',
+      data: {{ reps | tojson }},
+      borderColor: 'green',
+    },
+    volume: {
+      label: 'Volume (kg)',
+      data: {{ volumes | tojson }},
+      borderColor: 'orange',
+    }
+  };
+
+  const chartData = {
+    labels: {{ labels | tojson }},
+    datasets: Object.values(dataMap).map(d => ({
+      ...d,
+      fill: false,
+      tension: 0.3,
+      pointRadius: 4,
+      backgroundColor: d.borderColor
+    }))
+  };
+
+  const chart = new Chart(ctx, {
+    type: 'line',
+    data: chartData,
     options: {
       responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Exercise Progress'
+        },
+        legend: {
+          position: 'top'
+        }
+      },
       scales: {
         x: {
           title: {
             display: true,
-            text: 'Set Number (Chronological)'
+            text: 'Set Sequence'
           }
         },
         y: {
           beginAtZero: true,
           title: {
             display: true,
-            text: 'Weight (kg)'
+            text: 'Value'
           }
-        }
-      },
-      plugins: {
-        title: {
-          display: true,
-          text: 'Weight Progress Across Sets'
         }
       }
     }
+  });
+
+  // Checkbox toggle logic
+  document.querySelectorAll('.toggle-dataset').forEach(checkbox => {
+    checkbox.addEventListener('change', () => {
+      const key = checkbox.dataset.key;
+      const index = chart.data.datasets.findIndex(ds => ds.label === dataMap[key].label);
+      chart.data.datasets[index].hidden = !checkbox.checked;
+      chart.update();
+    });
   });
 });
 </script>

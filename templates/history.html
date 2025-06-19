@@ -15,8 +15,9 @@
   <div class="col-md-4">
     <input type="date" name="log_date" class="form-control">
   </div>
-  <div class="col-md-4">
-    <button type="submit" class="btn btn-primary">Apply Filter</button>
+  <div class="col-md-4 d-flex justify-content-between">
+    <button type="submit" class="btn btn-primary me-2">Apply Filter</button>
+    <a href="{{ url_for('export_logs') }}" class="btn btn-outline-success">📁 Export to CSV</a>
   </div>
 </form>
 
@@ -48,5 +49,4 @@
 {% if logs|length == 0 %}
   <p>No workout logs found yet.</p>
 {% endif %}
-
 {% endblock %}

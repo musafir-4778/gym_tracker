@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>📊 Select Exercise for Progress Graph</h3>
+
+<form method="POST" class="mt-3">
+  <div class="row">
+    <div class="col-md-6">
+      <select class="form-select" name="exercise_name" required>
+        <option value="">-- Choose Exercise --</option>
+        {% for ex in exercises %}
+          <option value="{{ ex.name }}">{{ ex.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2">
+      <button type="submit" class="btn btn-primary">View Graph</button>
+    </div>
+  </div>
+</form>
+{% endblock %}
